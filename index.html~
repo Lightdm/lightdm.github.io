@@ -96,6 +96,8 @@ function create() {
     game.physics.arcade.enable(dog);
 
 	 game.physics.arcade.enable(heart);
+	 
+	 game.physics.arcade.enable(fallingledge);
 
     //  Player physics properties. Give the little guy a slight bounce.
     player.body.bounce.y = 0.2;
@@ -130,7 +132,7 @@ function create() {
     cursors = game.input.keyboard.createCursorKeys();
     
    
-    fallingledge.velocity.x = 100;
+    fallingledge.velocity.x = 10;
        
 }
 
