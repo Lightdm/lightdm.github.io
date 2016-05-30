@@ -208,7 +208,8 @@ function update() {
 
     if (cursors.down.isDown && player.body.touching.down == false)
     {
-	player.body.velocity.y = 2100;
+	 	player.body.velocity.y = 2100;
+	 	dog.body.velocity.y = 2100;
 
 
     }
