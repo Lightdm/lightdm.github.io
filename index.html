@@ -74,7 +74,7 @@ function create() {
     ledge.body.immovable = true;
     
     fallingledge = platforms.create(800, 550, 'redground');
-    fallingledge.body.immovable = true;
+    
     
     ledge = platforms.create(1200, 700, 'ground');
     ledge.body.immovable = true;
@@ -99,6 +99,8 @@ function create() {
 	 game.physics.arcade.enable(heart);
 	 
 	 game.physics.arcade.enable(fallingledge);
+	 
+	 fallingledge.velocity.x = 0.0000000000000000000000000001;
 
     //  Player physics properties. Give the little guy a slight bounce.
     player.body.bounce.y = 0.2;
@@ -133,7 +135,7 @@ function create() {
     cursors = game.input.keyboard.createCursorKeys();
     
    
-    fallingledge.velocity.x = 0.0000000000000000000000000001;
+    
        
 }
 
