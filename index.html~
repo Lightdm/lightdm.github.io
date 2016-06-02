@@ -115,7 +115,7 @@ function create() {
 	 heart.body.bounce.y = 0;
 	 heart.body.collideWorldBounds = true;
 	 
-	 fallingledge.body.bounce.x = 10;
+	 fallingledge.body.bounce.x = 1;
 	 fallingledge.body.collideWorldBounds = true;
 	 
     //  Our two animations, walking left and right.
