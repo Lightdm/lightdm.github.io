@@ -98,10 +98,10 @@ function create() {
 	 
 
     // The player and its settings
-    player = game.add.sprite(screen.width-100, game.world.height - 150, 'dude');
-    player2 = game.add.sprite(100, game.world.height - 150, 'dude2');
+    player = game.add.sprite(screen.width-50, game.world.height - 150, 'dude');
+    player2 = game.add.sprite(50, game.world.height - 150, 'dude2');
 
-	 dog = game.add.sprite(screen.width-100, game.world.height - 150, 'baddie');
+	 dog = game.add.sprite(screen.width-50, game.world.height - 150, 'baddie');
 	 
     //  We need to enable physics on the player
     game.physics.arcade.enable(player);
@@ -205,12 +205,59 @@ function update() {
     
 
     //  Reset the players velocity (movement)
-    player.body.velocity.x = 0;
-
-    player2.body.velocity.x = 0;
+    if(player.body.velocity.x > 0)
+    {
+    player.body.velocity.x = player.body.velocity.x - 4;
+	 dog.body.velocity.x = dog.body.velocity.x - 4;
+	 }
+	 else if(player.body.velocity.x < 0)
+	 {	 
+    player.body.velocity.x = player.body.velocity.x + 4;
+	 dog.body.velocity.x = dog.body.velocity.x + 4;
+	 }
+	 else 
+	 {
+	 player.body.velocity.x = 0;
+	 dog.body.velocity.x = 0;
+	 }
+	 
+	 if(player2.body.velocity.x > 0)
+	 {
+    player2.body.velocity.x = player2.body.velocity.x - 4;
+    }
+    else if(player2.body.velocity.x < 0)
+    {
+    player2.body.velocity.x = player2.body.velocity.x + 4;
+    }
+    else
+    {
+	 player2.body.velocity.x = 0;    	
+    }
     
-    dog.body.velocity.x = 0;
 
+
+	if(player.position.x == screen.width-40)
+	{
+		player.position.x = 50;
+		dog.position.x = 50;
+	}
+	
+	if(player.position.x == 40)
+	{
+		player.position.x = screen.width - 50;
+		dog.position.x = screen.width - 50;
+	}
+	
+	if(player2.position.x == screen.width-40)
+	{
+		player2.position.x = 50;
+	}
+	
+	if(player2.position.x == 40)
+	{
+		player2.position.x = screen.width - 50;
+	}
+	
     if (cursors.left.isDown)
     {
         //  Move to the left
@@ -372,6 +419,8 @@ function update() {
 		
 		window.location.reload();
 	}
+	
+	
 }
 
 </script>
