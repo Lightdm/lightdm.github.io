@@ -1,0 +1,429 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+    <title>SUPAAAAAA BRAWWWL MLG GET REKT GG EZ NINJA FIGHTING NINTENDO</title>
+	<script type="text/javascript" src="js/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        		 }
+    </style>
+</head>
+<body background="sky">
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(screen.width - 1, screen.height - 100, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+function preload() {
+
+    game.load.image('sky', 'sky.png');
+    game.load.image('ground', 'platform.png');
+    game.load.image('redground', 'platform - Kopie.png');
+    game.load.image('star', 'star.png');
+    //game.load.image('healthbar', 'healthbar.png');
+    game.load.spritesheet('dude', 'dude.png', 32, 46);
+    game.load.spritesheet('dude2', 'dude - Kopie.png', 32, 46);
+    game.load.spritesheet('baddie', 'baddie.png', 32, 32);
+    game.load.image('heart', 'heart - Kopie.png');
+    
+
+}
+
+var player;
+var player2;
+var dog;
+var platforms;
+var cursors;
+
+var text;
+var text2;
+var sky;
+var fallingledge;
+
+var counterp1;
+var counterp2;
+
+var timer;
+
+var healthbar1;
+var healthbar2;
+
+function create() {
+
+	 //STATS TEXT
+
+	 
+
+    //  We're going to be using physics, so enable the Arcade Physics system
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    //  A simple background for our game
+    sky = game.add.sprite(0, 0, 'sky');
+	 sky.scale.setTo(screen.width/400, 2);
+    
+
+    //  The platforms group contains the ground and the 2 ledges we can jump on
+    platforms = game.add.group();
+
+    //  We will enable physics for any object that is created in this group
+    platforms.enableBody = true;
+
+    // Here we create the ground.
+    var ground = platforms.create(0, game.world.height - 64, 'ground');
+
+    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+    ground.scale.setTo(screen.width/400, 2);
+
+    //  This stops it from falling away when you jump on it
+    ground.body.immovable = true;
+
+    //  Now let's create two ledges
+    var ledge = platforms.create(400, 400, 'ground');
+    ledge.body.immovable = true;
+
+    ledge = platforms.create(0, 250, 'ground');
+    ledge.body.immovable = true;
+    
+    fallingledge = platforms.create(800, 550, 'redground');
+    
+    
+    ledge = platforms.create(1200, 700, 'ground');
+    ledge.body.immovable = true;
+    
+    ledge = platforms.create(1400, 850, 'ground');
+    ledge.body.immovable = true;
+
+	 
+
+    // The player and its settings
+    player = game.add.sprite(screen.width-100, game.world.height - 150, 'dude');
+    player2 = game.add.sprite(100, game.world.height - 150, 'dude2');
+
+	 dog = game.add.sprite(screen.width-100, game.world.height - 150, 'baddie');
+	 
+    //  We need to enable physics on the player
+    game.physics.arcade.enable(player);
+    game.physics.arcade.enable(player2);
+    
+    game.physics.arcade.enable(dog);
+
+	 
+	 
+	 game.physics.arcade.enable(fallingledge);
+
+    //  Player physics properties. Give the little guy a slight bounce.
+    player.body.bounce.y = 0.2;
+    player.body.gravity.y = 300;
+    player.body.collideWorldBounds = true;
+
+    player2.body.bounce.y = 0.2;
+    player2.body.gravity.y = 300;
+    player2.body.collideWorldBounds = true;
+
+	 dog.body.bounce.y = 0.2;
+	 dog.body.gravity.y = 300;
+	 dog.body.collideWorldBounds = true;
+	 
+	
+	 
+	 fallingledge.body.bounce.x = 1;
+	 fallingledge.body.collideWorldBounds = true;
+	 
+    //  Our two animations, walking left and right.
+    player.animations.add('left', [0, 1, 2, 3], 10, true);
+    player.animations.add('right', [5, 6, 7, 8], 10, true);
+
+    player2.animations.add('left', [0, 1, 2, 3], 10, true);
+    player2.animations.add('right', [5, 6, 7, 8], 10, true);
+
+	 dog.animations.add('left', [0, 1], 10, true);
+	 dog.animations.add('right', [2, 3], 10, true);
+
+    //  Our controls.
+    cursors = game.input.keyboard.createCursorKeys();
+    
+   
+    fallingledge.body.velocity.x = 0.0000000000000000000000000001;
+   
+	 
+	 
+	 counterp1 = 100;
+	 counterp2 = 100;
+	 
+	 text = game.add.text(200, 120, "HP: "+counterp1+"%", { font: "65px Arial", fill: "#ffffff", align: "center" });
+	 text.anchor.setTo(0.5, 0.5);
+	 
+	 text2 = game.add.text(screen.width - 250, 120, "HP: "+counterp2+"%", { font: "65px Arial", fill: "#ffffff", align: "center" });
+	 text2.anchor.setTo(0.5, 0.5);
+	 
+    text3 = game.add.text(screen.width/2, 100, "SLAAAAMMED!!", { font: "65px Arial", fill: "#ffffff", align: "center" });
+	 text3.anchor.setTo(0.5, 0.5);
+    
+    text3.visible = false;
+
+	 healthbar1 = game.add.sprite(screen.width-screen.width/20,50,"heart");
+	 healthbar1.anchor.x = 0.5;
+	 healthbar1.anchor.y = 0.5;
+	 healthbar2 = game.add.sprite(50,50,"heart");
+	 healthbar2.anchor.x = 0.5;
+	 healthbar2.anchor.y = 0.5;
+    
+    alert("Steuerung: Player 1 : WASD, Player 2 : Pfeiltasten, Slam: S/unten \n Try to jump on your oponents head, your and his healthbar are shown in the corners")
+}
+
+function update() {
+
+    var A = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    var D = game.input.keyboard.addKey(Phaser.Keyboard.D);
+    var W = game.input.keyboard.addKey(Phaser.Keyboard.W);
+    var S = game.input.keyboard.addKey(Phaser.Keyboard.S);
+
+	 //game.debug.body(player);
+	 //game.debug.body(player2);
+	 //game.debug.body(dog);
+	 //game.debug.body(heart);
+
+    //  Collide the player and the stars with the platforms
+        
+    
+    game.physics.arcade.collide(player, platforms);
+
+    game.physics.arcade.collide(player2, platforms);
+    
+    game.physics.arcade.collide(dog, platforms);
+   
+	 //game.physics.arcade.collide(player, heart); 
+	 //game.physics.arcade.collide(player2, heart); 
+	 //game.physics.arcade.collide(dog, heart); 
+    
+    game.physics.arcade.collide(player, player2, hit);
+    
+    //game.physics.arcade.collide(fallingledge, ledge);
+    
+    
+
+    //  Reset the players velocity (movement)
+    if(player.body.velocity.x > 0)
+    {
+    player.body.velocity.x = player.body.velocity.x - 4;
+	 dog.body.velocity.x = dog.body.velocity.x - 4;
+	 }
+	 else if(player.body.velocity.x < 0)
+	 {	 
+    player.body.velocity.x = player.body.velocity.x + 4;
+	 dog.body.velocity.x = dog.body.velocity.x + 4;
+	 }
+	 else 
+	 {
+	 player.body.velocity.x = 0;
+	 dog.body.velocity.x = 0;
+	 }
+	 
+	 if(player2.body.velocity.x > 0)
+	 {
+    player2.body.velocity.x = player2.body.velocity.x - 4;
+    }
+    else if(player2.body.velocity.x < 0)
+    {
+    player2.body.velocity.x = player2.body.velocity.x + 4;
+    }
+    else
+    {
+	 player2.body.velocity.x = 0;    	
+    }
+    
+
+
+	if(player.position.x == screen.width-40)
+	{
+		player.position.x = 50;
+		dog.position.x = 50;
+	}
+	
+	if(player.position.x == 40)
+	{
+		player.position.x = screen.width - 50;
+		dog.position.x = screen.width - 50;
+	}
+	
+	if(player2.position.x == screen.width-40)
+	{
+		player2.position.x = 50;
+	}
+	
+	if(player2.position.x == 40)
+	{
+		player2.position.x = screen.width - 50;
+	}
+	
+    if (cursors.left.isDown)
+    {
+        //  Move to the left
+        player.body.velocity.x = -150;
+
+		  
+        player.animations.play('left');
+		  
+    }
+    
+
+
+    else if (cursors.right.isDown)
+    {
+        //  Move to the right
+        player.body.velocity.x = 150;
+
+		  
+        player.animations.play('right');
+		  
+    }
+
+    else
+    {
+        //  Stand still
+        player.animations.stop();
+
+        player.frame = 4;
+
+	
+    }
+    
+    //  Allow the player to jump if they are touching the ground.
+    if (cursors.up.isDown && player.body.touching.down)
+    {
+        player.body.velocity.y = -350;
+        
+        dog.body.velocity.y = -350;
+
+
+    }
+
+    if (cursors.down.isDown && player.body.touching.down == false)
+    {
+	 	player.body.velocity.y = 2100;
+	 	dog.body.velocity.y = 2100;
+
+
+    }
+
+    if (A.isUp == false)
+    {
+	 	player2.body.velocity.x = -150;
+	 
+	 	
+	 	player2.animations.play('left');
+	 	
+    }
+
+    else if (D.isUp == false)
+    {
+        //  Move to the right
+        player2.body.velocity.x = 150;
+
+        player2.animations.play('right');
+       
+    }
+
+    else
+    {
+	player2.animations.stop();
+
+        player2.frame = 4;
+    }
+
+    if (W.isUp == false && player2.body.touching.down)
+    {	
+	player2.body.velocity.y = -350;
+    }
+
+    if (S.isUp == false && player2.body.touching.down == false)
+    {
+	player2.body.velocity.y = 2100;
+    }
+
+
+	 dog.body.velocity.x = Math.pow(player.position.x - dog.position.x, 3)*0.0005;
+	 
+	 
+	 dog.animations.currentAnim.speed = Math.abs(dog.body.velocity.x) /20 ;
+	 
+	 
+	 if (dog.body.velocity.x > 0)
+	 {
+	 	dog.animations.play('right');
+	 }
+	 
+	 else if (dog.body.velocity.x < 0)
+	 {
+	 	dog.animations.play('left');
+    }
+    
+
+	 
+	 
+    
+    function hit() 
+	 {
+		if (player.position.y > player2.position.y + 25) 
+		{
+			
+			counterp2 = counterp2 - 1;
+			
+			healthbar1.scale.setTo(counterp2/100);
+			text2.text = "HP: "+counterp2+"%";
+			
+			
+			
+		}
+		
+		else if(player2.position.y > player.position.y + 25)
+		{
+			counterp1 = counterp1 - 1;
+			
+			healthbar2.scale.setTo(counterp1/100);
+			text.text = "HP: "+counterp1+"%";
+			
+		}
+	
+	}
+	
+	if(player.position.y > game.world.height - 80)	
+	{
+		text3.visible = true;
+		
+	} 
+	else if(player2.position.y > game.world.height - 80)
+	{
+	
+		text3.visible = true;
+	}
+	else
+	{
+		text3.visible = false;
+	}
+	
+	if(counterp1 == 0)
+	{
+		alert("Player 2 wins the game")
+		
+		window.location.reload();
+		
+		
+	}
+	
+	if(counterp2 == 0)
+	{
+		alert("Player 1 wins the game")
+		
+		window.location.reload();
+	}
+	
+	
+}
+
+</script>
+
+</body>
+</html>
